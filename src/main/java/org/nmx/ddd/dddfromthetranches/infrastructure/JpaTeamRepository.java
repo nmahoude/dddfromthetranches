@@ -1,47 +1,49 @@
 package org.nmx.ddd.dddfromthetranches.infrastructure;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.nmx.ddd.dddfromthetranches.domain.model.Team;
 import org.nmx.ddd.dddfromthetranches.domain.ports.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JpaTeamRepository implements TeamRepository {
-	ThreadLocal<Map<Team, TeamEntity>> references = ThreadLocal.withInitial(() -> new HashMap<>());
 	
 	@Autowired
-	SpringJpaRepository springRepo;
+	SpringJpaRepository2 springRepo;
 	
 	
 	@Override
-	public Team load(String teamId) {
+	public Team get(String teamId) {
 		TeamEntity entity = springRepo.findById(teamId).orElseThrow();
-		Team team = entity.toTeam();
-		
-		references.get().put(team, entity);
-		
-		return team;
+		return entity.toTeam();
 	}
 	
 	@Override
-	public void save(Team team) {
-		TeamEntity teamE = references.get().computeIfAbsent(team, t -> new TeamEntity(team));
+	public void put(Team team) {
+		TeamEntity teamE = springRepo.getReferenceById(team.id());  // check if it loaded in spring jpa context
+		if (teamE.id == null) { // if not, create a new one
+			teamE = new TeamEntity();
+			teamE.id = team.id();
+		}
 		
-		teamE.updateFrom(team);
+		teamE.updateFrom(team); // update from the domain model
 		
 		// technical considerations , not domain ....
-		if (! springRepo.existsById(team.getId())) {
+		// can use prepersist & preupdate for this ones
+		if (! springRepo.existsById(team.id())) {
 			teamE.createdAt = LocalDateTime.now(); 
 		} else {
 			teamE.updatedAt = LocalDateTime.now();
 		}
 		
-		TeamEntity e = springRepo.save(teamE); // really save the entity and get back the managed one
-		references.get().put(team, e); // put the correct entity (managed) in the references
-		// our domain object has not changed !
+		TeamEntity e = springRepo.save(teamE); // really save the entity and get back the managed one but our domain object has not changed !
 	}
 }
+
+interface SpringJpaRepository2 extends JpaRepository<TeamEntity, String>{
+
+}
+

@@ -4,7 +4,7 @@ import org.nmx.ddd.dddfromthetranches.domain.model.Team;
 
 public interface TeamRepository {
 
-	void save(Team team);
-	Team load(String teamId);
+	void put(Team team);
+	Team get(String teamId);
 
 }

@@ -9,11 +9,11 @@ public class Team {
 		this.name = name;
 	}
 
-	public String getId() {
+	public String id() {
 		return id;
 	}
 
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
@@ -21,7 +21,4 @@ public class Team {
 		this.name = name;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
 }

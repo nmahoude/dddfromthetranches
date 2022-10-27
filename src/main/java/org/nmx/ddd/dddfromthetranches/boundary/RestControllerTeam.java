@@ -17,28 +17,29 @@ public class RestControllerTeam {
 	TeamRepository teams;
 	
 	@GetMapping("/teams/{id}")
-	public Team get(@PathVariable("id")String id) {
+	public TeamDto get(@PathVariable("id")String id) {
 		
-		return teams.load(id);
+		return TeamDto.from(teams.get(id));
 	}
 	
 	@PostMapping("/teams")
-	public Team save(@RequestBody Team team) {
+	public TeamDto save(@RequestBody TeamDto dto) {
 		// have to put the technical id from the code
-		team.setId("0");
 		
-		teams.save(team);
-		return team;
+		Team team = new Team("0", dto.name);
+		
+		teams.put(team);
+		return TeamDto.from(team);
 	}
 	
 	@PutMapping("/teams/{id}")
-	public Team update(@PathVariable("id")String id, @RequestBody Team updatedTeam) {
-		Team t = teams.load(id);
+	public TeamDto update(@PathVariable("id")String id, @RequestBody TeamDto updatedTeam) {
+		Team t = teams.get(id);
 		
-		t.setName(updatedTeam.getName());
+		t.setName(updatedTeam.name);
 		
-		teams.save(t);
-		return t;
+		teams.put(t);
+		return TeamDto.from(t);
 	}
 	
 }
