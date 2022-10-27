@@ -17,7 +17,14 @@ public class TeamEntity {
 	public LocalDateTime createdAt;
 	public LocalDateTime updatedAt;
 	
+	public TeamEntity() {
+	}
 	
+	public TeamEntity(Team team) {
+		this.updateFrom(team);
+	}
+
+
 	public Team toTeam() {
 		return new Team(id, name);
 	}
@@ -28,6 +35,12 @@ public class TeamEntity {
 		te.id = team.getId();
 		te.name = team.getName();
 		return te;
+	}
+
+
+	public void updateFrom(Team team) {
+		id = team.getId();
+		name = team.getName();
 	}
 	
 }

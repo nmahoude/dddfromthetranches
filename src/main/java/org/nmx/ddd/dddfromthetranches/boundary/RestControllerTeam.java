@@ -24,6 +24,9 @@ public class RestControllerTeam {
 	
 	@PostMapping("/teams")
 	public Team save(@RequestBody Team team) {
+		// have to put the technical id from the code
+		team.setId("0");
+		
 		teams.save(team);
 		return team;
 	}
