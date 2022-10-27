@@ -17,7 +17,7 @@ public class JpaTeamRepository implements TeamRepository {
 	
 	@Override
 	public Team load(String teamId) {
-		return springRepo.getReferenceById(teamId).toTeam();
+		return springRepo.findById(teamId).orElseThrow().toTeam();
 	}
 	
 	@Override
