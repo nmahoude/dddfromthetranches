@@ -27,8 +27,6 @@ public class RestControllerTeam {
 	
 	@PostMapping("/teams")
 	public TeamDto save(@RequestBody TeamDto dto) {
-		// have to put the technical id from the code
-		
 		Team team = teams.create(dto.name);
 		return TeamDto.from(team);
 	}

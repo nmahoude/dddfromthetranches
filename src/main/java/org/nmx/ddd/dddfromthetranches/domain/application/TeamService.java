@@ -38,7 +38,9 @@ public class TeamService {
 	}
 
 	public Team create(String name) {
-		Team team = new Team(TeamId.of("0"), name);
+		String nextId = "0"; // CAN DO : inject an id generator or asks the TeamsRepository 
+		
+		Team team = new Team(TeamId.of(nextId), name);
 		teamsRepository.put(team);
 		return team;
 	}
