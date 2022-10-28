@@ -18,18 +18,17 @@ import jakarta.persistence.Version;
 @Table(name="TEAM")
 public class TeamEntity {
 
+	// domain state
 	@Id
 	public String id;
-	
 	public String name;
-	
 	@OneToMany(cascade = CascadeType.ALL)
 	public List<MemberEntity> members = new ArrayList<>();
 	
-	
+
+	// technical data
 	public LocalDateTime createdAt;
 	public LocalDateTime updatedAt;
-	
 	@Version
   Integer version;
 	
@@ -41,7 +40,7 @@ public class TeamEntity {
 	}
 
 	/*
-	 Done in the repository for demo purpose  
+	 Done in the repository for demo purpose, could be here  
 	@PrePersist
 	private void create() {
 		this.createdAt = LocalDateTime.now();
