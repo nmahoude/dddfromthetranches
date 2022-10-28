@@ -37,4 +37,10 @@ public class TeamService {
 		return t;
 	}
 
+	public Team create(String name) {
+		Team team = new Team(TeamId.of("0"), name);
+		teamsRepository.put(team);
+		return team;
+	}
+
 }
