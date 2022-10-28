@@ -31,7 +31,7 @@ public class TeamService {
 	public Team addMember(TeamId id, String name) {
 		Team t = teamsRepository.get(id);
 
-		t.toMember(name);
+		t.addMember(name);
 		
 		teamsRepository.put(t);
 		return t;

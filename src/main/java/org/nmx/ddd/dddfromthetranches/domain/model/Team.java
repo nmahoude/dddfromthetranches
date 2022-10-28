@@ -39,7 +39,7 @@ public class Team {
 	}
 
 	
-	public void toMember(String memberName) {
+	public void addMember(String memberName) {
 		this.members.add(new Member(UUID.randomUUID().toString(), memberName));
 	}
 

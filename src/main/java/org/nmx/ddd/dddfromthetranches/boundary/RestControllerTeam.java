@@ -40,7 +40,7 @@ public class RestControllerTeam {
 		
 
 		Team t = teams.updateName(TeamId.of(id), updatedTeam.name);
-		
+
 		return TeamDto.from(t);
 	}
 
