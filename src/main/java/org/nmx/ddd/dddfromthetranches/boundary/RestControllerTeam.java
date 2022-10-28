@@ -1,7 +1,8 @@
 package org.nmx.ddd.dddfromthetranches.boundary;
 
+import org.nmx.ddd.dddfromthetranches.domain.application.TeamService;
 import org.nmx.ddd.dddfromthetranches.domain.model.Team;
-import org.nmx.ddd.dddfromthetranches.domain.ports.TeamRepository;
+import org.nmx.ddd.dddfromthetranches.domain.model.TeamId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,32 +15,47 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestControllerTeam {
 
 	@Autowired
-	TeamRepository teams;
+	TeamService teams;
+	
 	
 	@GetMapping("/teams/{id}")
 	public TeamDto get(@PathVariable("id")String id) {
+		assertTeamId(id);
 		
-		return TeamDto.from(teams.get(id));
+		return TeamDto.from(teams.get(TeamId.of(id)));
 	}
 	
 	@PostMapping("/teams")
 	public TeamDto save(@RequestBody TeamDto dto) {
 		// have to put the technical id from the code
 		
-		Team team = new Team("0", dto.name);
-		
+		Team team = new Team(TeamId.of("0"), dto.name);
 		teams.put(team);
 		return TeamDto.from(team);
 	}
 	
 	@PutMapping("/teams/{id}")
 	public TeamDto update(@PathVariable("id")String id, @RequestBody TeamDto updatedTeam) {
-		Team t = teams.get(id);
+		assertTeamId(id);
 		
-		t.setName(updatedTeam.name);
+
+		Team t = teams.updateName(TeamId.of(id), updatedTeam.name);
 		
-		teams.put(t);
 		return TeamDto.from(t);
 	}
-	
+
+	@PostMapping("/teams/{id}/members")
+	public TeamDto addMember(@PathVariable("id")String id, @RequestBody String name) {
+		assertTeamId(id);
+		
+		Team t = teams.addMember(TeamId.of(id), name);
+		
+		return TeamDto.from(t);
+	}
+
+	private void assertTeamId(String id) {
+		if (id == null) {
+			throw new IllegalArgumentException("team id can't be null");
+		}
+	}
 }

@@ -3,6 +3,7 @@ package org.nmx.ddd.dddfromthetranches.infrastructure;
 import java.time.LocalDateTime;
 
 import org.nmx.ddd.dddfromthetranches.domain.model.Team;
+import org.nmx.ddd.dddfromthetranches.domain.model.TeamId;
 import org.nmx.ddd.dddfromthetranches.domain.ports.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,24 +17,24 @@ public class JpaTeamRepository implements TeamRepository {
 	
 	
 	@Override
-	public Team get(String teamId) {
-		TeamEntity entity = springRepo.findById(teamId).orElseThrow();
+	public Team get(TeamId teamId) {
+		TeamEntity entity = springRepo.findById(teamId.id()).orElseThrow();
 		return entity.toTeam();
 	}
 	
 	@Override
 	public void put(Team team) {
-		TeamEntity teamE = springRepo.getReferenceById(team.id());  // check if it loaded in spring jpa context
+		TeamEntity teamE = springRepo.getReferenceById(team.id().id());  // check if it is loaded in spring jpa context
 		if (teamE.id == null) { // if not, create a new one
 			teamE = new TeamEntity();
-			teamE.id = team.id();
+			teamE.id = team.id().id();
 		}
 		
 		teamE.updateFrom(team); // update from the domain model
 		
 		// technical considerations , not domain ....
-		// can use prepersist & preupdate for this ones
-		if (! springRepo.existsById(team.id())) {
+		// can use prepersist & preupdate for this ones but, for the demo, I let them here
+		if (! springRepo.existsById(team.id().id())) {
 			teamE.createdAt = LocalDateTime.now(); 
 		} else {
 			teamE.updatedAt = LocalDateTime.now();

@@ -1,22 +1,32 @@
 package org.nmx.ddd.dddfromthetranches.infrastructure;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.nmx.ddd.dddfromthetranches.domain.model.Team;
+import org.nmx.ddd.dddfromthetranches.domain.model.TeamId;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
 @Entity
+@Table(name="TEAM")
 public class TeamEntity {
 
 	@Id
 	public String id;
 	
 	public String name;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	public List<MemberEntity> members = new ArrayList<>();
+	
+	
 	public LocalDateTime createdAt;
 	public LocalDateTime updatedAt;
 	
@@ -30,6 +40,8 @@ public class TeamEntity {
 		this.updateFrom(team);
 	}
 
+	/*
+	 Done in the repository for demo purpose  
 	@PrePersist
 	private void create() {
 		this.createdAt = LocalDateTime.now();
@@ -39,23 +51,18 @@ public class TeamEntity {
 	private void update() {
 		this.updatedAt = LocalDateTime.now();
 	}
-
+	*/
+	
 	public Team toTeam() {
-		return new Team(id, name);
+		return new Team(TeamId.of(id), name, new ArrayList<>(members.stream().map(MemberEntity::toMember).toList()));
 	}
-
-
-	public static TeamEntity from(Team team) {
-		TeamEntity te = new TeamEntity();
-		te.id = team.id();
-		te.name = team.name();
-		return te;
-	}
-
 
 	public void updateFrom(Team team) {
-		id = team.id();
+		id = team.id().id();
 		name = team.name();
+		
+		this.members.clear();
+		this.members.addAll(team.members().stream().map(m -> MemberEntity.from(m)).toList());
 	}
 	
 }
