@@ -62,7 +62,7 @@ public class TeamEntity {
 		name = team.name();
 		
 		this.members.clear();
-		this.members.addAll(team.members().stream().map(m -> MemberEntity.from(m)).toList());
+		this.members.addAll(team.members().stream().map(MemberEntity::from).toList());
 	}
 	
 }
