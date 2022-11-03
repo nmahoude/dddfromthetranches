@@ -8,6 +8,8 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
 
+import jakarta.persistence.Entity;
+
 public class ArchitectureTests {
 
 	private static final String BOUNDARY = "boundary";
@@ -30,6 +32,12 @@ public class ArchitectureTests {
 	void domainDoesNotDependOnBoundary() throws Exception {
         noClasses().that().resideInAPackage(".." + DOMAIN + "..")
 	    .should().dependOnClassesThat().resideInAPackage(".." + BOUNDARY + "..").allowEmptyShould(true).check(productionClasses);
+	}
+
+	@Test
+	void domainDoesNotDependOnJpaEntity() throws Exception {
+        noClasses().that().resideInAPackage(".." + DOMAIN + "..")
+	    .should().beAnnotatedWith(Entity.class).allowEmptyShould(true).check(productionClasses);
 	}
 
 	@Test

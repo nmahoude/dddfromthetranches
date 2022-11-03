@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamService {
 
-	@Autowired
-	TeamRepository teamsRepository;
+	private final TeamRepository teamsRepository;
 	
+	@Autowired
+	public TeamService(TeamRepository teamRepository) {
+		teamsRepository = teamRepository;
+	}
+
 	public Team get(TeamId id) {
 		return teamsRepository.get(id);
 	}
@@ -22,7 +26,7 @@ public class TeamService {
 
 	public Team updateName(TeamId teamId, String name) {
 		Team t = teamsRepository.get(teamId);
-		t.setName(name);
+		t.updateName(name);
 		
 		teamsRepository.put(t);
 		return t;

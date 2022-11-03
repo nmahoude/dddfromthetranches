@@ -34,7 +34,7 @@ public class Team {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void updateName(String name) {
 		this.name = name;
 	}
 

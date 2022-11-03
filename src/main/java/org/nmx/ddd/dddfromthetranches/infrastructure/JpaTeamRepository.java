@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public class JpaTeamRepository implements TeamRepository {
 	
 	@Autowired
-	SpringJpaRepository2 springRepo;
+	SpringJpaRepository springRepo;
 	
 	
 	@Override
@@ -44,7 +44,7 @@ public class JpaTeamRepository implements TeamRepository {
 	}
 }
 
-interface SpringJpaRepository2 extends JpaRepository<TeamEntity, String>{
+interface SpringJpaRepository extends JpaRepository<TeamEntity, String>{
 
 }
 

@@ -8,4 +8,5 @@ public interface TeamRepository {
 	void put(Team team);
 	Team get(TeamId teamId);
 
+	
 }
