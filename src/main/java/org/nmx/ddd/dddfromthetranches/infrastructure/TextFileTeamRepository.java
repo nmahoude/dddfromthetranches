@@ -8,13 +8,12 @@ public class TextFileTeamRepository implements TeamRepository {
 
 	@Override
 	public void put(Team team) {
-		
+		throw new RuntimeException("Not implemented, for demo only");
 	}
 
 	@Override
 	public Team get(TeamId teamId) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Not implemented, for demo only");
 	}
 
 }
